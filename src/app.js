@@ -1,3 +1,5 @@
+app.use(cors({ origin: 'https://ai-job-prep-frontend.vercel.app' }))
+
 require("dotenv").config();
 
 const express = require("express");
@@ -17,6 +19,8 @@ app.use(
     credentials: true,
   })
 );
+
+
 
 app.use(cookieParser());
 app.use(express.json());
