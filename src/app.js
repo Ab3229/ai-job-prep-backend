@@ -9,14 +9,22 @@ const { interviewRouter } = require("./routes/interview.router");
 
 const app = express();
 
-// Frontend URL
-const allowedOrigin =
-  process.env.FRONTEND_URL || "http://localhost:5173";
+// Accept one or more frontend URLs, with or without a trailing slash.
+const allowedOrigins = (process.env.FRONTEND_URLS || process.env.FRONTEND_URL || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim().replace(/\/$/, ""))
+  .filter(Boolean);
 
 // CORS
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("CORS origin is not allowed"));
+    },
     credentials: true,
   })
 );

@@ -20,13 +20,19 @@ function toUserResponse(user) {
   };
 }
 
-function setAuthCookie(res, token) {
-  res.cookie("token", token, {
+function getAuthCookieOptions() {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 60 * 60 * 1000,
-  });
+  };
+}
+
+function setAuthCookie(res, token) {
+  res.cookie("token", token, getAuthCookieOptions());
 }
 
 authrouter.post("/register", async (req, res) => {
@@ -140,7 +146,7 @@ authrouter.post("/logout", async (req, res) => {
       await tokenBlacklistModal.create({ token });
     }
 
-    res.clearCookie("token");
+    res.clearCookie("token", getAuthCookieOptions());
     res.json({ message: "Logged out successfully" });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
