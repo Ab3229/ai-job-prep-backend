@@ -13,3 +13,12 @@ Node.js backend for AI-assisted job and interview preparation. The API combines 
 - MongoDB persistence for users, token blacklists, and interview reports
 - CORS support for a configured frontend origin
 
+## Frontend
+
+The frontend is built with React and Vite and provides the user interface for authentication, interview preparation, and AI-powered job preparation.
+
+**Frontend Repository:**  
+https://github.com/Ab3229/genai-job-prep-frontend
+
+**Live Frontend:**  
+https://genai-job-prep-frontend.vercel.app/
