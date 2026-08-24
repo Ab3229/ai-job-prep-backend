@@ -14,16 +14,33 @@ const allowedOrigins = (process.env.FRONTEND_URLS || process.env.FRONTEND_URL ||
   .split(",")
   .map((origin) => origin.trim().replace(/\/$/, ""))
   .filter(Boolean);
+const allowVercelPreview = String(process.env.ALLOW_VERCEL_PREVIEW || "false").toLowerCase() === "true";
+
+function isOriginAllowed(origin) {
+  if (!origin) return true;
+
+  const normalizedOrigin = String(origin).replace(/\/$/, "");
+  if (allowedOrigins.includes(normalizedOrigin)) {
+    return true;
+  }
+
+  if (allowVercelPreview && /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(normalizedOrigin)) {
+    return true;
+  }
+
+  return false;
+}
 
 // CORS
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+      if (isOriginAllowed(origin)) {
         return callback(null, true);
       }
 
-      return callback(new Error("CORS origin is not allowed"));
+      // Reject silently instead of bubbling as a 500 error.
+      return callback(null, false);
     },
     credentials: true,
   })

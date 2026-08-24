@@ -22,8 +22,13 @@ NODE_ENV=production
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
 GEMINI_API_KEY=your_gemini_api_key
-FRONTEND_URL=https://genai-job-prep-frontend.vercel.app
+FRONTEND_URLS=https://your-production-vercel-domain.vercel.app,https://genai-job-prep-frontend-git-main-ab3229s-projects.vercel.app
+ALLOW_VERCEL_PREVIEW=true
 ```
+
+`FRONTEND_URLS` accepts a comma-separated list of allowed origins.
+If you set `ALLOW_VERCEL_PREVIEW=true`, preview deployments on `*.vercel.app`
+are also allowed.
 
 The frontend must call the Render API URL, for example
 `https://your-backend.onrender.com/api/auth/login`, and send cookies with
